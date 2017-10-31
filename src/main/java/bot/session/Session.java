@@ -6,6 +6,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Message;
 
@@ -25,8 +27,9 @@ import bot.service.answer.RepeatArgument;
 import bot.service.answer.RepeatArgumentStop;
 import bot.service.answer.SaveCocktailAnswer;
 import bot.service.generator.AnswerGenerator;
-import bot.service.impl.AdminServiceImpl;
 
+@Component
+@Scope("prototype")
 public class Session {
 
 	private final static Logger LOGGER = LoggerFactory.getLogger(Session.class);
@@ -53,7 +56,6 @@ public class Session {
 	public Session() {
 		super();
 		LOGGER.info("************ Session created ************");
-		this.adminService = new AdminServiceImpl();
 	}
 
 	// service

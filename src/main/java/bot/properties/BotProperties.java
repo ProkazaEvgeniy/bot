@@ -14,7 +14,7 @@ public class BotProperties {
 
 	private final static Logger LOGGER = LoggerFactory.getLogger(BotConfig.class);
 
-	public static final String CONFIG_BOT_FILE = "C:/Users/Kristina/workspace/bot/config/bot/bot.properties";
+	public static final String CONFIG_BOT_FILE = "C:/Users/Yevhenii/eclipse-workspace/bot/config/bot/bot.properties";
 
 	public static String TOKEN;
 	public static String BOT_NAME;

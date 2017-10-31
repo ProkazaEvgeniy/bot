@@ -5,6 +5,11 @@ import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -19,15 +24,23 @@ import bot.service.generator.AnswerGenerator;
 import bot.service.generator.impl.AnswerGeneratorProvider;
 import bot.session.Session;
 
-public class BotMain extends TelegramLongPollingBot {
+@Component
+public class BotMain extends TelegramLongPollingBot implements ApplicationContextAware{
 
 	private final static Logger LOGGER = LoggerFactory.getLogger(BotMain.class);
 
-	private String botUsername = BotProperties.BOT_NAME;
+	private String botUsername;
 
-	private String botToken = BotProperties.TOKEN;
+	private String botToken;
 
-	private String idAdmin = BotProperties.ID_ADMIN;
+	private String idAdmin;
+	
+	private ApplicationContext applicationContext;
+	
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+		this.applicationContext = applicationContext;
+	}
 
 	@Override
 	public String getBotUsername() {
@@ -40,13 +53,21 @@ public class BotMain extends TelegramLongPollingBot {
 	}
 
 	private LoadingCache<String, Session> sessions;
+	
+	static {
+		BotProperties.load();
+		ApiContextInitializer.init();
+	}
 
 	public BotMain() {
+		botUsername = BotProperties.BOT_NAME;
+		botToken = BotProperties.TOKEN;
+		idAdmin = BotProperties.ID_ADMIN;
 		this.sessions = CacheBuilder.newBuilder().expireAfterAccess(10L, TimeUnit.MINUTES)
 				.build(new CacheLoader<String, Session>() {
 					@Override
 					public Session load(String s) throws Exception {
-						return new Session();
+						return applicationContext.getBean(Session.class);
 					}
 				});
 		LOGGER.info("************ BotMain created ************");

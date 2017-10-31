@@ -1,5 +1,8 @@
 package bot.configuration;
 
+import javax.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.TelegramBotsApi;
@@ -10,12 +13,16 @@ import bot.properties.BotProperties;
 
 @Configuration
 public class BotConfig {
+	
+	@Autowired
+	private BotMain botMain;
 
-	BotConfig(){
-		BotProperties.load();
-		ApiContextInitializer.init();
+	@PostConstruct
+	private void init(){
+		//BotProperties.load();
+		//ApiContextInitializer.init();
 		try {
-			new TelegramBotsApi().registerBot(new BotMain());
+			new TelegramBotsApi().registerBot(botMain);
 		} catch (TelegramApiRequestException e) {
 			e.printStackTrace();
 		}

@@ -2,6 +2,8 @@ package bot.service.impl;
 
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+
 import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
@@ -37,6 +39,11 @@ public class AdminServiceImpl implements AdminService {
 	public AdminServiceImpl() {
 		super();
 		LOGGER.info("************ AdminServiceImpl created ************");
+	}
+	
+	@PostConstruct
+	private void init() {
+		LOGGER.info("------------------------------------------------------------->>>>>>>>>"+cocktailSearchRepository);
 	}
 
 	@Override
